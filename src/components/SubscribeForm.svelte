@@ -103,7 +103,7 @@
   {#await Promise.all([getFormFields(), getChoices()])}
     <p>Loading...</p>
   {:then [formFields, choices]}
-    {#each Object.entries(formFields) as [id, details] (id)}
+    {#each Object.entries(formFields).filter(([, d]) => !d.read_only) as [id, details] (id)}
       <div class="form-group">
         <label for={id}
           >{details.label}
