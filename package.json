@@ -9,8 +9,10 @@
   "scripts": {
     "dev": "concurrently \"vite build --watch --mode development\" \"http-server dist -p 3001 -o\"",
     "build": "vite build",
-    "check": "svelte-check --tsconfig ./tsconfig.json"
+    "check": "svelte-check --tsconfig ./tsconfig.json",
+    "prepublish": "npm run build"
   },
+  "main": "dist/resin-formulaire.js",
   "devDependencies": {
     "@sveltejs/vite-plugin-svelte": "^3.0.2",
     "@tsconfig/svelte": "^5.0.2",
