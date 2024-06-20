@@ -1,0 +1,23 @@
+# Publish the package in the GitHub Package Registry
+
+name: Publish
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+    publish:
+        runs-on: ubuntu-latest
+        steps:
+        - uses: actions/checkout@v4
+        - uses: actions/setup-node@v4
+          with:
+            registry-url: 'https://npm.pkg.github.com'
+            node-version: '20'
+            scope: '@medialab'
+        - run: npm ci
+        - run: npm publish
+          env:
+          NODE_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
