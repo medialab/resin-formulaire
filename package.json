@@ -1,7 +1,10 @@
 {
-  "name": "resin-formulaire",
-  "private": true,
-  "version": "0.0.0",
+  "name": "@medialab/resin-formulaire",
+  "repository": "https://github.com/medialab/resin-formulaire.git",
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com"
+  },
+  "version": "0.0.1",
   "type": "module",
   "scripts": {
     "dev": "concurrently \"vite build --watch --mode development\" \"http-server dist -p 3001 -o\"",
