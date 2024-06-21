@@ -2,6 +2,8 @@
   import Autocomplete from "./Autocomplete.svelte";
 
   export let success = false;
+  export let initialData: Record<string, any> = {};
+  export let token: string | null;
 
   type LanguageChoice = {
     pt2b: string;
@@ -72,6 +74,7 @@
   let errors: Record<string, Array<string>> = {};
 
   async function submit(event: Event) {
+    let isUpdate = !!initialData.id && !!token;
     errors = {};
     const form = event.target as HTMLFormElement;
     const formData = new FormData(form);
@@ -81,15 +84,23 @@
         formData.delete(key);
       }
     }
-    const response = await fetch("http://localhost:8000/api/members/", {
-      method: "POST",
-      body: formData,
-    });
+
+    const response = await fetch(
+      `http://localhost:8000/api/members/${isUpdate ? `${initialData.id}/` : ""}`,
+      {
+        method: isUpdate ? "PATCH" : "POST",
+        body: formData,
+        headers: {
+          ...(token ? { Authorization: `Token ${token}` } : {}),
+        },
+      },
+    );
+
     const data = await response.json();
     if (response.status === 400) {
       errors = data;
     }
-    if (response.status === 201) {
+    if (response.status === 201 || response.status === 200) {
       success = true;
     }
   }
@@ -116,7 +127,7 @@
             class="form-control"
             required={details.required}
           >
-            <option value="">---</option>
+            <option value={initialData[id] || ""}>---</option>
             {#each details.choices as gender}
               <option value={gender.value}>{gender.display_name}</option>
             {/each}
@@ -128,6 +139,7 @@
             name={id}
             class="form-control"
             required={details.required}
+            value={initialData[id] || ""}
           />
         {:else if id === "photo"}
           <input
@@ -137,20 +149,28 @@
             class="form-control"
             required={details.required}
           />
+          {#if initialData[id]}
+            <img
+              src={initialData[id]}
+              alt="Profil"
+              style="width: 200px; height: auto;"
+            />
+          {/if}
         {:else if id === "languages" || id === "expertise" || id === "skills"}
           <Autocomplete
             {id}
             name={id}
             choices={choices[id]}
             required={details.required}
+            selection={initialData[id] || []}
           />
         {:else if id === "long_bio" || id === "publications" || id === "training" || id === "comments"}
           <textarea
             {id}
             name={id}
             class="form-control"
-            required={details.required}
-          ></textarea>
+            required={details.required}>{initialData[id] || ""}</textarea
+          >
         {:else}
           <input
             type="text"
@@ -158,6 +178,7 @@
             name={id}
             class="form-control awesomplete"
             required={details.required}
+            value={initialData[id] || ""}
           />
         {/if}
         {#if details.help_text}

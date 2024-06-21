@@ -1,2 +1,2 @@
 import "./app.css";
-import Subscribe from "./Subscribe.svelte";
+import FormComponent from "./FormComponent.svelte";

@@ -8,6 +8,7 @@
   export let name: string;
   export let id: string;
   export let required: boolean;
+  export let selection: Array<any> = [];
 
   let componentElement: HTMLDivElement;
   let inputElement: HTMLInputElement;
@@ -16,7 +17,6 @@
   let search = "";
   let searchResult: Choice[] = [];
 
-  let selection: Array<any> = [];
   let selectionDisplay: string;
 
   $: selectionDisplay = selection.length
