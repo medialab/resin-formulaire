@@ -2,7 +2,6 @@
   customElement={{
     tag: "resin-formulaire",
     shadow: "none",
-    reflect: true,
   }}
 />
 

@@ -56,7 +56,6 @@
   }
 
   function inputKeydown(event: KeyboardEvent) {
-    console.log(event.key);
     if (event.key === "ArrowDown") {
       event.preventDefault();
       const button = componentElement.querySelector("button");
@@ -74,10 +73,13 @@
 </script>
 
 <div bind:this={componentElement}>
-  <input type="hidden" {name} {id} bind:value={selection} />
+  {#each selection as value (value)}
+    <input type="hidden" {name} {value} />
+  {/each}
   <input
     bind:this={inputElement}
     type="text"
+    {id}
     {required}
     value={inputValue}
     on:input={updateSearch}
