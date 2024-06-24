@@ -1,6 +1,7 @@
 <script lang="ts">
   import Autocomplete from "./Autocomplete.svelte";
 
+  export let apiServer = "http://localhost:8000";
   export let success = false;
   export let initialData: Record<string, any> = {};
   export let token: string | null;
@@ -27,7 +28,7 @@
   const getFormFields = async (): Promise<Map<string, FormField>> =>
     (
       await (
-        await fetch("http://localhost:8000/api/members/", {
+        await fetch(`${apiServer}/api/members/`, {
           headers: {
             "Content-Type": "application/json",
           },
@@ -43,7 +44,7 @@
   ].map(
     (endpoint) => async () =>
       await (
-        await fetch("http://localhost:8000/api/" + endpoint + "/", {
+        await fetch(`${apiServer}/api/` + endpoint + "/", {
           headers: {
             "Content-Type": "application/json",
           },
@@ -86,7 +87,7 @@
     }
 
     const response = await fetch(
-      `http://localhost:8000/api/members/${isUpdate ? `${initialData.id}/` : ""}`,
+      `${apiServer}/api/members/${isUpdate ? `${initialData.id}/` : ""}`,
       {
         method: isUpdate ? "PATCH" : "POST",
         body: formData,

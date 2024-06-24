@@ -8,6 +8,8 @@
 <script lang="ts">
   import SubscribeForm from "./components/Form.svelte";
 
+  export let apiServer = "http://localhost:8000";
+
   // Get uid and token params
   const urlParams = new URLSearchParams(window.location.search);
   const uid = urlParams.get("uid");
@@ -20,7 +22,7 @@
 
     let res;
     try {
-      res = await fetch(`http://localhost:8000/api/members/${uid}/`, {
+      res = await fetch(`${apiServer}/api/members/${uid}/`, {
         headers: {
           "Content-Type": "application/json",
           ...(token ? { Authorization: `Token ${token}` } : {}),

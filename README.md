@@ -23,8 +23,12 @@ import ResinFormulaire from '@medialab/resin-formulaire';
 <!-- mypage.html -->
 <script src="mybundle.js"></script>
 
-<resin-formulaire />
+<resin-formulaire apiServer="http://locahost:8000" />
 ```
+
+`apiServer` doit contenir la base d'URL [du serveur
+de l'API de Résin](https://github.com/medialab/resin-api),
+sous la forme `protocol://domain[:port]`.
 
 Par défaut, le formulaire affiché est le formulaire d'inscription.
 Si les paramètres `uid` et `token` sont passés en querystring,
