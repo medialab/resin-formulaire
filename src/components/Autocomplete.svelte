@@ -7,7 +7,6 @@
   export let choices: Choice[] = [];
   export let name: string;
   export let id: string;
-  export let required: boolean;
   export let selection: Array<any> = [];
 
   let componentElement: HTMLDivElement;
@@ -66,6 +65,7 @@
   <input
     type="text"
     {id}
+    placeholder="Tapez pour chercher..."
     bind:value={search}
     on:focus={() => (focus = true)}
     on:blur={focusOut}

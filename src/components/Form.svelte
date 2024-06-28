@@ -1,7 +1,7 @@
 <script lang="ts">
   import Autocomplete from "./Autocomplete.svelte";
 
-  export let apiServer = "http://localhost:8000";
+  export let apiServer: string;
   export let endpoint = "/api/members/";
   export let success = false;
   export let initialData: Record<string, any> = {};
@@ -169,7 +169,6 @@
               {id}
               name={id}
               {choices}
-              required={details.required}
               selection={initialData[id] || []}
             />
           {/await}
