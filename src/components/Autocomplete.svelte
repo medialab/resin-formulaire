@@ -11,43 +11,15 @@
   export let selection: Array<any> = [];
 
   let componentElement: HTMLDivElement;
-  let inputElement: HTMLInputElement;
-  let inputValue = "";
   let focus = false;
   let search = "";
   let searchResult: Choice[] = [];
 
-  let selectionDisplay: string;
-
-  $: selectionDisplay = selection.length
-    ? selection
-        .map((value) => {
-          const choice = choices.find((choice) => choice.value === value);
-          return choice ? choice.label : value;
-        })
-        .join(", ") + (focus ? ", " : "")
-    : "";
-  $: inputValue = selectionDisplay + search;
-
-  $: searchResult = choices.filter((choice) =>
-    choice.label.toLowerCase().includes(search.toLowerCase()),
+  $: searchResult = choices.filter(
+    (choice) =>
+      choice.label.toLowerCase().includes(search.toLowerCase()) &&
+      !selection.includes(choice.value),
   );
-
-  function updateSearch(event: Event) {
-    const value = (event.target as HTMLInputElement).value;
-    if (
-      search === "" &&
-      value.length < selectionDisplay.length &&
-      selection.length > 0
-    ) {
-      selection = selection.slice(0, -1);
-      search = "";
-    } else if (value.startsWith(selectionDisplay)) {
-      search = value.replace(selectionDisplay, "");
-    } else {
-      (event.target as HTMLInputElement).value = selectionDisplay;
-    }
-  }
 
   function focusOut(event: FocusEvent) {
     if (!componentElement.contains(event.relatedTarget as Node)) {
@@ -68,7 +40,7 @@
   function addSelection(choice: Choice) {
     selection = [...selection, choice.value];
     search = "";
-    inputElement.focus();
+    focus = false;
   }
 </script>
 
@@ -76,19 +48,32 @@
   {#each selection as value (value)}
     <input type="hidden" {name} {value} />
   {/each}
+  {#if selection.length > 0}
+    <ul class="selection">
+      {#each selection as value (value)}
+        <li>
+          <button
+            on:click|capture|stopImmediatePropagation|stopPropagation|preventDefault={() =>
+              (selection = selection.filter((v) => v !== value))}
+          >
+            x
+          </button>
+          {choices.find((choice) => choice.value === value)?.label}
+        </li>
+      {/each}
+    </ul>
+  {/if}
   <input
-    bind:this={inputElement}
     type="text"
     {id}
-    {required}
-    value={inputValue}
-    on:input={updateSearch}
+    bind:value={search}
     on:focus={() => (focus = true)}
+    on:blur={focusOut}
     on:focusout={focusOut}
     on:keydown={inputKeydown}
   />
   {#if focus}
-    <ul>
+    <ul class="choices">
       {#each searchResult as choice (choice.value)}
         <li>
           <button
@@ -105,7 +90,24 @@
 </div>
 
 <style>
-  ul {
+  ul.selection {
+    list-style-type: none;
+  }
+
+  ul.selection button {
+    border: 0;
+    background-color: transparent;
+    cursor: pointer;
+    height: 1.5rem;
+    width: 1.5rem;
+    color: #666;
+
+    &:hover {
+      background-color: #f9f9f9;
+    }
+  }
+
+  ul.choices {
     list-style-type: none;
     padding: 0;
     margin: 0;
@@ -114,19 +116,19 @@
     overflow-y: auto;
   }
 
-  li {
+  ul.choices li {
     padding: 0;
     cursor: pointer;
   }
 
-  button {
+  ul.choices li:hover {
+    background-color: #f9f9f9;
+  }
+
+  ul.choices button {
     text-align: left;
     border: 0;
     padding: 0.5rem;
     width: 100%;
-  }
-
-  li:hover {
-    background-color: #f9f9f9;
   }
 </style>
