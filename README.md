@@ -24,6 +24,9 @@ import ResinFormulaire from '@medialab/resin-formulaire';
 <script src="mybundle.js"></script>
 
 <resin-formulaire apiServer="http://locahost:8000" />
+
+<!-- ou pour le formulaire de modification de profil -->
+<resin-formulaire-edit apiServer="http://locahost:8000 />
 ```
 
 `apiServer` doit contenir la base d'URL [du serveur

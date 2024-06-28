@@ -2,9 +2,11 @@
   import Autocomplete from "./Autocomplete.svelte";
 
   export let apiServer = "http://localhost:8000";
+  export let endpoint = "/api/members/";
   export let success = false;
   export let initialData: Record<string, any> = {};
-  export let token: string | null;
+  export let token: string | null = null;
+  export let sendLabel: string = "S'inscrire";
 
   type LanguageChoice = {
     pt2b: string;
@@ -28,7 +30,7 @@
   const getFormFields = async (): Promise<Map<string, FormField>> =>
     (
       await (
-        await fetch(`${apiServer}/api/members/`, {
+        await fetch(`${apiServer}${endpoint}`, {
           headers: {
             "Content-Type": "application/json",
           },
@@ -42,34 +44,39 @@
     "skills",
     "fields",
   ].map(
-    (endpoint) => async () =>
+    (choiceModel) => async () =>
       await (
-        await fetch(`${apiServer}/api/` + endpoint + "/", {
+        await fetch(`${apiServer}/api/${choiceModel}/`, {
           headers: {
             "Content-Type": "application/json",
           },
           method: "GET",
         })
       ).json(),
-  );
+  ) as [
+    () => Promise<LanguageChoice[]>,
+    () => Promise<SkillChoice[]>,
+    () => Promise<SkillChoice[]>,
+  ];
 
-  const getChoices = async () => {
-    const [languages, skills, fields]: [
-      LanguageChoice[],
-      SkillChoice[],
-      SkillChoice[],
-    ] = await Promise.all([getLanguages(), getSkills(), getFields()]);
-    return {
-      languages: languages.map(({ pt2b, name }) => ({
-        value: pt2b,
-        label: name,
-      })),
-      expertise: fields.map(({ id, field }) => ({ value: id, label: field })),
-      skills: skills.map(({ id, field, skill, detail }) => ({
-        value: id,
-        label: `${field} - ${detail ? `${skill} - ${detail}` : skill}`,
-      })),
-    };
+  const getChoices = async (field: "languages" | "expertise" | "skills") => {
+    switch (field) {
+      case "languages":
+        return (await getLanguages()).map(({ pt2b, name }) => ({
+          value: pt2b,
+          label: name,
+        }));
+      case "expertise":
+        return (await getFields()).map(({ id, field }) => ({
+          value: id,
+          label: field,
+        }));
+      case "skills":
+        return (await getSkills()).map(({ id, field, skill, detail }) => ({
+          value: id,
+          label: `${field} - ${detail ? `${skill} - ${detail}` : skill}`,
+        }));
+    }
   };
 
   let errors: Record<string, Array<string>> = {};
@@ -97,9 +104,8 @@
       },
     );
 
-    const data = await response.json();
     if (response.status === 400) {
-      errors = data;
+      errors = await response.json();
     }
     if (response.status === 201 || response.status === 200) {
       success = true;
@@ -112,9 +118,9 @@
 </script>
 
 <form id="subscribe" on:submit|preventDefault={submit}>
-  {#await Promise.all([getFormFields(), getChoices()])}
+  {#await Promise.all([getFormFields()])}
     <p>Loading...</p>
-  {:then [formFields, choices]}
+  {:then [formFields]}
     {#each Object.entries(formFields).filter(([, d]) => !d.read_only) as [id, details] (id)}
       <div class="form-group">
         <label for={id}
@@ -129,7 +135,7 @@
             required={details.required}
           >
             <option value={initialData[id] || ""}>---</option>
-            {#each details.choices as gender}
+            {#each details.choices as gender (gender.value)}
               <option value={gender.value}>{gender.display_name}</option>
             {/each}
           </select>
@@ -158,13 +164,15 @@
             />
           {/if}
         {:else if id === "languages" || id === "expertise" || id === "skills"}
-          <Autocomplete
-            {id}
-            name={id}
-            choices={choices[id]}
-            required={details.required}
-            selection={initialData[id] || []}
-          />
+          {#await getChoices(id) then choices}
+            <Autocomplete
+              {id}
+              name={id}
+              {choices}
+              required={details.required}
+              selection={initialData[id] || []}
+            />
+          {/await}
         {:else if id === "long_bio" || id === "publications" || id === "training" || id === "comments"}
           <textarea
             {id}
@@ -189,13 +197,13 @@
         {/if}
         {#if errors[id]}
           <div class="invalid-feedback">
-            {#each errors[id] as error}
+            {#each errors[id] as error (error)}
               <small style:color="#B04838" use:scroll>{error}</small>
             {/each}
           </div>
         {/if}
       </div>
     {/each}
-    <button type="submit" class="btn btn-primary">S'inscrire</button>
+    <button type="submit" class="btn btn-primary">{sendLabel}</button>
   {/await}
 </form>

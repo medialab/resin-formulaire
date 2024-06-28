@@ -6,7 +6,7 @@
 />
 
 <script lang="ts">
-  import SubscribeForm from "./components/Form.svelte";
+  import Form from "./components/Form.svelte";
 
   export let apiServer = "http://localhost:8000";
 
@@ -51,7 +51,7 @@
   {#await getData()}
     <p>Chargement...</p>
   {:then data}
-    <SubscribeForm bind:success initialData={data} {token} />
+    <Form bind:success initialData={data} {token} {apiServer} />
   {:catch error}
     <p>Une erreur est survenue. {error.message}</p>
   {/await}

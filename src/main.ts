@@ -1,2 +1,3 @@
 import "./app.css";
-import FormComponent from "./FormComponent.svelte";
+import SubscribeComponent from "./SubscribeComponent.svelte";
+import EditComponent from "./EditComponent.svelte";
