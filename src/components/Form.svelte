@@ -1,7 +1,7 @@
 <script lang="ts">
   import Autocomplete from "./Autocomplete.svelte";
 
-  export let apiServer: string;
+  export let apiServer = window.location.orgin;
   export let endpoint = "/api/members/";
   export let success = false;
   export let initialData: Record<string, any> = {};
