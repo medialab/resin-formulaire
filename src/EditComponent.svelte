@@ -8,7 +8,7 @@
 <script lang="ts">
   import Form from "./components/Form.svelte";
 
-  export let apiServer = "http://localhost:8000";
+  export let apiServer = window.location.origin;
 
   // Get uid and token params
   let success = false;
