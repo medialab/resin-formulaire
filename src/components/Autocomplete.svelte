@@ -55,7 +55,7 @@
             on:click|capture|stopImmediatePropagation|stopPropagation|preventDefault={() =>
               (selection = selection.filter((v) => v !== value))}
           >
-            x
+            ❌
           </button>
           {choices.find((choice) => choice.value === value)?.label}
         </li>
