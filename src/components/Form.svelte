@@ -1,6 +1,7 @@
 <script lang="ts">
   import Autocomplete from "./Autocomplete.svelte";
   import Markdown from "./Markdown.svelte";
+  import Photo from "./Photo.svelte";
 
   export let apiServer: string;
   export let endpoint = "/api/members/";
@@ -159,20 +160,11 @@
             on:blur={htmlValidate}
           />
         {:else if id === "photo"}
-          <input
-            type="file"
+          <Photo
             {id}
-            name={id}
-            class="form-control"
             required={details.required}
+            initialData={initialData[id]}
           />
-          {#if initialData[id]}
-            <img
-              src={initialData[id]}
-              alt="Profil"
-              style="width: 200px; height: auto;"
-            />
-          {/if}
         {:else if id === "languages" || id === "expertise" || id === "skills"}
           {#await getChoices(id) then choices}
             <Autocomplete
