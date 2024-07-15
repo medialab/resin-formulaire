@@ -1,5 +1,6 @@
 <script lang="ts">
   import Autocomplete from "./Autocomplete.svelte";
+  import Markdown from "./Markdown.svelte";
 
   export let apiServer: string;
   export let endpoint = "/api/members/";
@@ -173,12 +174,11 @@
             />
           {/await}
         {:else if id === "long_bio" || id === "publications" || id === "training" || id === "comments"}
-          <textarea
+          <Markdown
             {id}
-            name={id}
-            class="form-control"
-            required={details.required}>{initialData[id] || ""}</textarea
-          >
+            required={details.required}
+            value={initialData[id] || ""}
+          />
         {:else}
           <input
             type="text"
