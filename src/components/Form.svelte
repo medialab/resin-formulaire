@@ -116,6 +116,14 @@
   function scroll(node: HTMLElement) {
     node.scrollIntoView({ behavior: "smooth", block: "center" });
   }
+
+  function htmlValidate(e: FocusEvent) {
+    if (!e.target) return;
+    const input = e.target as HTMLInputElement;
+    if (!input.checkValidity()) {
+      input.reportValidity();
+    }
+  }
 </script>
 
 <form id="subscribe" on:submit|preventDefault={submit}>
@@ -148,6 +156,7 @@
             class="form-control"
             required={details.required}
             value={initialData[id] || ""}
+            on:blur={htmlValidate}
           />
         {:else if id === "photo"}
           <input
