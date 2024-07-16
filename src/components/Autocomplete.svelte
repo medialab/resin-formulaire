@@ -72,21 +72,6 @@
   {#each selection as value (value)}
     <input type="hidden" {name} {value} />
   {/each}
-  {#if selection.length > 0}
-    <ul class="selection">
-      {#each selection as value (value)}
-        <li>
-          <button
-            on:click|capture|stopImmediatePropagation|stopPropagation|preventDefault={() =>
-              (selection = selection.filter((v) => v !== value))}
-          >
-            ❌
-          </button>
-          {choices.find((choice) => choice.value === value)?.label}
-        </li>
-      {/each}
-    </ul>
-  {/if}
   <input
     type="text"
     {id}
@@ -113,11 +98,34 @@
       {/each}
     </ul>
   {/if}
+  {#if selection.length > 0}
+    <ul class="selection">
+      {#each selection as value (value)}
+        <li>
+          <button
+            on:click|capture|stopImmediatePropagation|stopPropagation|preventDefault={() =>
+              (selection = selection.filter((v) => v !== value))}
+          >
+            ❌
+          </button>
+          {choices.find((choice) => choice.value === value)?.label}
+        </li>
+      {/each}
+    </ul>
+  {/if}
 </div>
 
 <style>
+  /* Idéalement tout le css devrait être dans le projet affichant le formulaire */
   ul.selection {
     list-style-type: none;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+
+  ul.selection li {
+    margin-right: 1rem;
   }
 
   ul.selection button {
