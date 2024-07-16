@@ -29,10 +29,35 @@
   function inputKeydown(event: KeyboardEvent) {
     if (event.key === "ArrowDown") {
       event.preventDefault();
-      const button = componentElement.querySelector("button");
+      const target = event.target as HTMLInputElement;
+      const button = target.nextElementSibling?.querySelector("button");
       if (button) {
         button.focus();
       }
+    }
+  }
+
+  function listKeydown(event: KeyboardEvent) {
+    if (event.key === "ArrowDown") {
+      event.preventDefault();
+      const target = event.target as HTMLButtonElement;
+      const next =
+        target.parentElement?.nextElementSibling?.querySelector("button");
+      next?.focus();
+    }
+
+    if (event.key === "ArrowUp") {
+      event.preventDefault();
+      const target = event.target as HTMLButtonElement;
+      const prev =
+        target.parentElement?.previousElementSibling?.querySelector("button");
+      prev?.focus();
+    }
+
+    // Echap
+    if (event.key === "Escape") {
+      event.preventDefault();
+      focus = false;
     }
   }
 
@@ -80,6 +105,7 @@
             on:click|capture|stopImmediatePropagation|stopPropagation|preventDefault={() =>
               addSelection(choice)}
             on:focusout={focusOut}
+            on:keydown={listKeydown}
           >
             {choice.label}
           </button>
