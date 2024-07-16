@@ -149,7 +149,6 @@
             class="form-control"
             required={details.required}
           >
-            <option value={initialData[id] || ""}>---</option>
             {#each details.choices as gender (gender.value)}
               <option value={gender.value}>{gender.display_name}</option>
             {/each}
