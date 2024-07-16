@@ -18,7 +18,7 @@
   <Form
     {apiServer}
     bind:success
-    endpoint="/api/members/new_auth_link"
+    endpoint="/api/members/new_auth_link/"
     sendLabel="Recevoir le lien"
   />
 {:else}

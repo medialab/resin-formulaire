@@ -96,7 +96,7 @@
     }
 
     const response = await fetch(
-      `${apiServer}/api/members/${isUpdate ? `${initialData.id}/` : ""}`,
+      `${apiServer}${endpoint}${isUpdate ? `${initialData.id}/` : ""}`,
       {
         method: isUpdate ? "PATCH" : "POST",
         body: formData,
@@ -109,6 +109,11 @@
     if (response.status === 400) {
       errors = await response.json();
     }
+
+    if (response.status === 403) {
+      errors[""] = (await response.json()).detail;
+    }
+
     if (response.status === 201 || response.status === 200) {
       success = true;
     }
@@ -204,6 +209,11 @@
         {/if}
       </div>
     {/each}
+    {#if errors[""]}
+      <p>
+        {errors[""]}
+      </p>
+    {/if}
     <button type="submit" class="btn btn-primary">{sendLabel}</button>
   {/await}
 </form>
