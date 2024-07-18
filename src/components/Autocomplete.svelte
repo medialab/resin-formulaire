@@ -64,7 +64,6 @@
   function addSelection(choice: Choice) {
     selection = [...selection, choice.value];
     search = "";
-    focus = false;
   }
 </script>
 
