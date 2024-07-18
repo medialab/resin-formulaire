@@ -28,6 +28,8 @@
 />
 {#if initialData}
   <img src={initialData} alt="Profil" style="width: 200px; height: auto;" />
+  <input type="checkbox" id="delete_{id}" name="delete_{id}" />
+  <label for="delete_{id}">Supprimer ma photo</label>
 {/if}
 {#if previewURI}
   <div

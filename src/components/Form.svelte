@@ -136,7 +136,7 @@
   {#await Promise.all([getFormFields()])}
     <p>Loading...</p>
   {:then [formFields]}
-    {#each Object.entries(formFields).filter(([, d]) => !d.read_only) as [id, details] (id)}
+    {#each Object.entries(formFields).filter(([id, details]) => !details.read_only && !id.startsWith("delete_")) as [id, details] (id)}
       <div class="form-group">
         <label for={id}
           >{details.label}
