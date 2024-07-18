@@ -113,6 +113,13 @@
       {/each}
     </ul>
   {/if}
+  {#if id === "skills"}
+    <div id="{id}Help" class="form-text text-muted">
+      <small
+        >Vous pouvez ajouter encore {6 - selection.length} compétences.
+      </small>
+    </div>
+  {/if}
 </div>
 
 <style>
