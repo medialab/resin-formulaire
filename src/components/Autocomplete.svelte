@@ -20,8 +20,10 @@
       !selection.includes(choice.value),
   );
 
-  function focusOut(event: FocusEvent) {
-    if (!componentElement.contains(event.relatedTarget as Node)) {
+  function focusOut(event: FocusEvent | MouseEvent) {
+    if (
+      !componentElement.contains((event.target || event.relatedTarget) as Node)
+    ) {
       focus = false;
     }
   }
@@ -67,7 +69,10 @@
     }
     selection = [...selection, choice.value];
     search = "";
+    focus = true;
   }
+
+  window.addEventListener("click", focusOut);
 </script>
 
 <div bind:this={componentElement}>
@@ -89,8 +94,7 @@
       {#each searchResult as choice (choice.value)}
         <li>
           <button
-            on:click|capture|stopImmediatePropagation|stopPropagation|preventDefault={() =>
-              addSelection(choice)}
+            on:click|stopPropagation|preventDefault={() => addSelection(choice)}
             on:focusout={focusOut}
             on:keydown={listKeydown}
           >
@@ -105,7 +109,7 @@
       {#each selection as value (value)}
         <li>
           <button
-            on:click|capture|stopImmediatePropagation|stopPropagation|preventDefault={() =>
+            on:click|stopPropagation|preventDefault={() =>
               (selection = selection.filter((v) => v !== value))}
           >
             ❌
