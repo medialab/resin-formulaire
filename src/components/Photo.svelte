@@ -3,6 +3,7 @@
   export let required = false;
   export let initialData: string | undefined;
 
+  let input: HTMLInputElement;
   let previewURI: string | undefined;
 
   function updatePreview(e: Event) {
@@ -25,6 +26,7 @@
   class="form-control"
   {required}
   on:change={updatePreview}
+  bind:this={input}
 />
 {#if initialData}
   <img src={initialData} alt="Profil" style="width: 200px; height: auto;" />
@@ -34,6 +36,7 @@
 {#if previewURI}
   <div
     style="
+    display: inline-block;
     height: 200px;
     background-size: cover;
     width: 200px;
@@ -41,4 +44,12 @@
     background-image: url({previewURI});
   "
   />
+  <button
+    on:click|capture|stopImmediatePropagation|stopPropagation|preventDefault={() => {
+      input.value = "";
+      previewURI = undefined;
+    }}
+  >
+    ❌
+  </button>
 {/if}
