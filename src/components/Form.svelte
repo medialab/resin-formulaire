@@ -2,6 +2,7 @@
   import Autocomplete from "./Autocomplete.svelte";
   import Markdown from "./Markdown.svelte";
   import Photo from "./Photo.svelte";
+  import AdditionalSkills from "./AdditionalSkills.svelte";
 
   export let apiServer: string;
   export let endpoint = "/api/members/";
@@ -9,6 +10,8 @@
   export let initialData: Record<string, any> = {};
   export let token: string | null = null;
   export let sendLabel: string = "S'inscrire";
+
+  let formState: Record<string, any> = initialData;
 
   type LanguageChoice = {
     pt2b: string;
@@ -148,6 +151,7 @@
             name={id}
             class="form-control"
             required={details.required}
+            bind:value={formState[id]}
           >
             {#each details.choices as gender (gender.value)}
               <option value={gender.value}>{gender.display_name}</option>
@@ -160,7 +164,7 @@
             name={id}
             class="form-control"
             required={details.required}
-            value={initialData[id] || ""}
+            bind:value={formState[id]}
             on:blur={htmlValidate}
           />
         {:else if id === "photo"}
@@ -175,23 +179,32 @@
               {id}
               name={id}
               {choices}
-              selection={initialData[id] || []}
+              bind:selection={formState[id]}
             />
           {/await}
         {:else if id === "long_bio" || id === "publications" || id === "training" || id === "comments"}
           <Markdown
             {id}
             required={details.required}
-            value={initialData[id] || ""}
+            bind:value={formState[id]}
           />
+        {:else if id === "additional_skills"}
+          {#await getChoices("skills") then choices}
+            <AdditionalSkills
+              {id}
+              bind:value={formState[id]}
+              {choices}
+              add={(value) => (formState["skills"] = [...formState[id], value])}
+            />
+          {/await}
         {:else}
           <input
             type="text"
             {id}
             name={id}
-            class="form-control awesomplete"
+            class="form-control"
             required={details.required}
-            value={initialData[id] || ""}
+            bind:value={formState[id]}
           />
         {/if}
         {#if details.help_text}
