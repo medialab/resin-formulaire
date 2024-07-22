@@ -75,7 +75,7 @@
   window.addEventListener("click", focusOut);
 </script>
 
-<div bind:this={componentElement}>
+<div bind:this={componentElement} class="widget-container">
   {#each selection as value (value)}
     <input type="hidden" {name} {value} />
   {/each}
@@ -90,19 +90,22 @@
     on:keydown={inputKeydown}
   />
   {#if focus}
-    <ul class="choices">
-      {#each searchResult as choice (choice.value)}
-        <li>
-          <button
-            on:click|stopPropagation|preventDefault={() => addSelection(choice)}
-            on:focusout={focusOut}
-            on:keydown={listKeydown}
-          >
-            {choice.label}
-          </button>
-        </li>
-      {/each}
-    </ul>
+    <div class="choices-container">
+      <ul class="choices">
+        {#each searchResult as choice (choice.value)}
+          <li>
+            <button
+              on:click|stopPropagation|preventDefault={() =>
+                addSelection(choice)}
+              on:focusout={focusOut}
+              on:keydown={listKeydown}
+            >
+              {choice.label}
+            </button>
+          </li>
+        {/each}
+      </ul>
+    </div>
   {/if}
   {#if selection.length > 0}
     <ul class="selection">
@@ -154,7 +157,17 @@
     }
   }
 
+  div.choices-container {
+    position: relative;
+    width: calc(100% - 50px);
+  }
+
   ul.choices {
+    position: absolute;
+    background-color: #fff;
+    z-index: 2;
+    right: 0;
+    left: 0;
     list-style-type: none;
     padding: 0;
     margin: 0;
@@ -166,6 +179,7 @@
   ul.choices li {
     padding: 0;
     cursor: pointer;
+    background-color: #fff;
   }
 
   ul.choices li:hover {
