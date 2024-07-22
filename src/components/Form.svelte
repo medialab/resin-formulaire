@@ -143,8 +143,11 @@
       <div class="form-group">
         <label for={id}
           >{details.label}
-          {#if details.required}*{/if}</label
-        >
+          {#if details.required}*{/if}
+          {#if details.type === "boolean"}
+            <input type="checkbox" {id} name={id} />
+          {/if}
+        </label>
         {#if id === "gender"}
           <select
             {id}
@@ -197,9 +200,7 @@
               add={(value) => (formState["skills"] = [...formState[id], value])}
             />
           {/await}
-        {:else if details.type === "boolean"}
-          <input type="checkbox" {id} name={id} />
-        {:else}
+        {:else if details.type !== "boolean"}
           <input
             type="text"
             {id}
