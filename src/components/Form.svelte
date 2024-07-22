@@ -197,6 +197,8 @@
               add={(value) => (formState["skills"] = [...formState[id], value])}
             />
           {/await}
+        {:else if details.type === "boolean"}
+          <input type="checkbox" {id} name={id} />
         {:else}
           <input
             type="text"
