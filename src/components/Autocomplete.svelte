@@ -62,6 +62,9 @@
   }
 
   function addSelection(choice: Choice) {
+    if (selection.length >= 6) {
+      return;
+    }
     selection = [...selection, choice.value];
     search = "";
   }
