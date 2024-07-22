@@ -51,7 +51,13 @@
   {#await getData()}
     <p>Chargement...</p>
   {:then data}
-    <Form bind:success initialData={data} {token} {apiServer} />
+    <Form
+      bind:success
+      initialData={data}
+      {token}
+      {apiServer}
+      sendLabel={uid ? "Mettre à jour" : "S'inscrire"}
+    />
   {:catch error}
     <p>Une erreur est survenue. {error.message}</p>
   {/await}
