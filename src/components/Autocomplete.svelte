@@ -112,7 +112,7 @@
             on:click|stopPropagation|preventDefault={() =>
               (selection = selection.filter((v) => v !== value))}
           >
-            ❌
+            &times;
           </button>
           {choices.find((choice) => choice.value === value)?.label}
         </li>

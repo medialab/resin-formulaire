@@ -50,6 +50,6 @@
       previewURI = undefined;
     }}
   >
-    ❌
+    &times;
   </button>
 {/if}
