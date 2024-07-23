@@ -197,7 +197,8 @@
               {id}
               bind:value={formState[id]}
               {choices}
-              add={(value) => (formState["skills"] = [...formState[id], value])}
+              add={(value) =>
+                (formState["skills"] = [...formState["skills"], value])}
             />
           {/await}
         {:else if details.type !== "boolean"}
@@ -208,6 +209,11 @@
             class="form-control"
             required={details.required}
             bind:value={formState[id]}
+            on:keydown={(e) => {
+              if (e.key === "Enter") {
+                e.preventDefault();
+              }
+            }}
           />
         {/if}
         {#if details.help_text}
