@@ -10,26 +10,20 @@
 
   const fuse = new Fuse(choices, {
     keys: ["label"],
+    minMatchCharLength: 3,
+    threshold: 0.3,
   });
 
-  function warning(event: Event) {
-    const input = event.target as HTMLInputElement;
-    match = fuse.search(input.value);
-  }
+  $: match = fuse.search(value, {
+    limit: 4,
+  });
 </script>
 
-<input
-  type="text"
-  {id}
-  name={id}
-  class="form-control"
-  {value}
-  on:change={warning}
-/>
+<input type="text" {id} name={id} class="form-control" bind:value />
 {#if match?.length}
   <div class="form-text text-danger">
     Les compétences existantes suivantes existent déjà et peuvent être ajoutées
-    directement : {#each match.slice(0, 4) as { item }, i (item.value)}
+    directement : {#each match as { item }, i (item.value)}
       <a
         href="#"
         on:click|preventDefault|stopPropagation={() => {
@@ -37,8 +31,8 @@
           value = "";
         }}>{item.label}</a
       >
-      {#if i < match.slice(0, 4).length - 2},
-      {:else if i < match.slice(0, 4).length - 1}
+      {#if i < match.length - 2},
+      {:else if i < match.length - 1}
         et
       {:else}.{/if}
     {/each}
