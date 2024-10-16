@@ -65,8 +65,9 @@
   <p>
     Vos informations ont bien été transmises.
     {#if token}
-      Votre profil doit encore être validé par l'administratrice avant d'être
-      publié.
+      Vos changements apparaîtront sur le site dans l'heure qui vient.
+    {:else}
+      Votre profil doit encore être validé par l'administratrice avant d'être publié.
     {/if}
   </p>
 {/if}
