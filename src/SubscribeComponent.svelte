@@ -62,12 +62,17 @@
     <p>Une erreur est survenue. {error.message}</p>
   {/await}
 {:else}
-  <p>
-    Vos informations ont bien été transmises.
-    {#if token}
-      Vos changements apparaîtront sur le site dans l'heure qui vient.
-    {:else}
-      Votre profil doit encore être validé par l'administratrice avant d'être publié.
-    {/if}
-  </p>
+  <div class="modal" id="modal--success">
+    <div class="modal-content">
+      <button class="close" aria-label="Fermer la modale">&times;</button>
+      <p>
+        Vos informations ont bien été transmises.
+        {#if token}
+          Vos changements apparaîtront sur le site dans l'heure qui vient.
+        {:else}
+          Votre profil doit encore être validé par l'administratrice avant d'être publié.
+        {/if}
+      </p>
+    </div>
+  </div>
 {/if}
